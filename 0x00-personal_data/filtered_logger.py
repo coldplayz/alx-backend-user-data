@@ -16,11 +16,10 @@ def filter_datum(
         separator: str
         ) -> str:
     """Returns the log `message` obfuscated."""
-    redact = message
+    rdt = message
     for field in fields:
-        redact = re.sub(
-                pr.format(separator, field), r.format(redaction), redact)
-    return redact
+        redact = re.sub(pr.format(separator, field), r.format(redaction), rdt)
+    return rdt
 
 
 def get_logger() -> logging.Logger:
