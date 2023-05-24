@@ -10,7 +10,7 @@ r = r'\1{}\2'  # replacement
 
 
 def filter_datum(
-        fields: Sequence[str],
+        fields: List[str],
         redaction: str,
         message: str,
         separator: str
