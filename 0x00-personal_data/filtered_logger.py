@@ -87,4 +87,43 @@ class RedactingFormatter(logging.Formatter):
         return super().format(record)
 
 
+def main() -> None:
+    """Retrieve rows from the database and log using the custom formatter.
+    """
+    # get `my_db` database connector
+    # TODO: close connection
+    connector = get_db()
+
+    # get a cursor
+    # TODO: close cursor
+    cursor = connector.cursor()
+
+    # retrieve all rows from users table
+    cursor.execute('SELECT * FROM users')  # result stored in cursor; iterable
+    rows_list = cursor.fetchall()  # list of rows of the result set
+    fields_tuple = cursor.column_names
+
+    # get logger
+    logger = get_logger()
+
+    # logging time
+    for row in rows_list:
+        msg_list = []
+        # take each row...
+        for field, value in zip(fields_tuple, row):
+            # ...and map to its field to create a log message field/unit
+            msg_field = "{}={}".format(field, value)
+            msg_list.append(msg_field)
+        # join all message fields into the actual message
+        msg = ";".join(msg_list)
+        # log message
+        logger.info(msg)
+
+    cursor.close()  # DONE: close cursor
+    connector.close()  # DONE: close connection
+
+
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
+
+if __name__ == '__main__':
+    main()
