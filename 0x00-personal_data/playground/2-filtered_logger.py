@@ -4,8 +4,6 @@
 from typing import List, Sequence
 import logging
 import re
-import mysql.connector
-import os
 
 pr = r'(.*{}?{}=).*?(;.*)'  # field regex
 r = r'\1{}\2'  # replacement
@@ -46,25 +44,6 @@ def get_logger() -> logging.Logger:
     logger.addHandler(handler)
 
     return logger
-
-
-# retrieve database credentials
-user = os.getenv('PERSONAL_DATA_DB_USERNAME')
-pwd = os.getenv('PERSONAL_DATA_DB_PASSWORD')
-host = os.getenv('PERSONAL_DATA_DB_HOST')
-db = os.getenv('PERSONAL_DATA_DB_NAME')
-
-
-def get_db() -> mysql.connector.connection.MySQLConnection:
-    """Returns a connector to a database.
-    """
-    connector = mysql.connector.connection.MySQLConnection(
-            host=host,
-            user=user,
-            password=pwd,
-            database=db,
-            )
-    return connector
 
 
 class RedactingFormatter(logging.Formatter):
