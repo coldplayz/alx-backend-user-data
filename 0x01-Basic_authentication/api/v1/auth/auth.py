@@ -17,9 +17,19 @@ class Auth:
         # it's assumed excluded_paths has strings ending with slash
         # ensure path ends with a slash always
         s_path = (path + '/') if not path.endswith('/') else path
+        """
         if s_path not in excluded_paths:
             return True
-        return False
+        """
+
+        for excluded_path in excluded_paths:
+            if '*' in excluded_path:
+                start = excluded_path.split('*')[0]
+                if s_path.startswith(start):
+                    return False
+            if s_path == excluded_path:
+                return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """Returns a string.
