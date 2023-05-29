@@ -29,7 +29,6 @@ class Auth:
 
         # check for Authorization header key
         auth_obj = request.headers.get('authorization')
-        print(auth_obj)
         if auth_obj is None:
             return None
         return auth_obj

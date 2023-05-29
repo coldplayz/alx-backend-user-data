@@ -51,7 +51,7 @@ class BasicAuth(Auth):
                     base64_authorization_header.encode(),
                     validate=True,
                     ).decode('utf-8')
-        except base64.binascii.Error:
+        except Exception:
             return None
 
     def extract_user_credentials(
@@ -95,3 +95,32 @@ class BasicAuth(Auth):
                 break
 
         return user  # or None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """Retrieves the User instance for a request.
+        """
+        # first get the authorization header from the request
+        # should not be None as before_request filters that out
+        auth_header = self.authorization_header(request)
+
+        # extract the base64 credentials
+        base64_enc = self.extract_base64_authorization_header(auth_header)
+        if base64_enc is None:
+            return None
+
+        # decode base64 credentials
+        base64_dec = self.decode_base64_authorization_header(base64_enc)
+        if base64_dec is None:
+            return None
+
+        # extract the user credentials from decoded header
+        credentials_tuple = self.extract_user_credentials(base64_dec)
+        if credentials_tuple[0] is None:
+            return None
+
+        # finally, retrieve User object from credentials
+        email = credentials_tuple[0]
+        pwd = credentials_tuple[1]
+        user = self.user_object_from_credentials(email, pwd)
+
+        return user
