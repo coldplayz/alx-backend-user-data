@@ -88,6 +88,7 @@ class BasicAuth(Auth):
 
         # get the list of User objects matching the email
         attr = {'email': user_email}
+        user_init = User()  # init the DATA dict if not yet
         user_list = User.search(attr)
 
         user = None
