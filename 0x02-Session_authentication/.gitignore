@@ -1,0 +1,4 @@
+__pycache__/
+playground/
+.mypy_cache/
+venv/
