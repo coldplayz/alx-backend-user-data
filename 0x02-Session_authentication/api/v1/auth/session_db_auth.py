@@ -35,6 +35,10 @@ class SessionDBAuth(SessionExpAuth):
 
         # retrieve the UserSession instance associated with session_id
         attr = {'session_id': session_id}
+        us = UserSession(
+                'fakeUserID',
+                'fakeSessionID',
+                )  # for initializing DATA in models/base.py
         user_sessions = UserSession.search(attr)  # Base method
         if not user_sessions:
             # no result; empty list
@@ -64,7 +68,7 @@ class SessionDBAuth(SessionExpAuth):
         """
         session_id = self.session_cookie(request)  # Auth method
 
-        destroyed = self.destroy_session(request)
+        destroyed = super().destroy_session(request)
 
         if destroyed:
             # retrieve the associated UserSession object and delete it
