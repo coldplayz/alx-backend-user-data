@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
+from typing import Dict
 from user import User
 import sqlalchemy
 import bcrypt
@@ -48,7 +49,7 @@ class DB:
 
         return user
 
-    def find_user_by(self, **kwargs: dict) -> User:
+    def find_user_by(self, **kwargs: Dict) -> User:
         """ Filters User objects based on kwargs, and returns the first.
         """
         sess = self._session
