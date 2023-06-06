@@ -54,7 +54,10 @@ class DB:
         sess = self._session
 
         # InvalidRequestError will be raised for non-existent attributes
-        user = sess.query(User).filter_by(**kwargs).first()
+        try:
+            user = sess.query(User).filter_by(**kwargs).first()
+        except Exception:
+            raise InvalidRequestError
         if user is None:
             raise NoResultFound
 
