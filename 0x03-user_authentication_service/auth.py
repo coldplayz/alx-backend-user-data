@@ -135,6 +135,30 @@ class Auth:
             # no User found
             raise ValueError
 
+    def update_password(self, reset_token: str, password: str) -> None:
+        """ Updates the password of a User having a reset token.
+        """
+        if reset_token is None or\
+                password is None or\
+                type(reset_token) is not str or\
+                type(password) is not str:
+            raise ValueError
+
+        # fetch corresponding user
+        db = self._db
+        try:
+            user = db.find_user_by(reset_token=reset_token)
+            # User found; update password and reset_token attributes
+            hashed_pwd = _hash_password(password)
+            db.update_user(
+                    user.id,
+                    hashed_password=hashed_pwd.decode(),
+                    reset_token=None,
+                    )
+        except NoResultFound:
+            # no User with reset_token found
+            raise ValueError
+
 
 '''
 class DB:

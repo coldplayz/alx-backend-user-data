@@ -68,7 +68,7 @@ def login() -> wrappers.Response:
 
 
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
-def logout() -> None:
+def logout() -> wrappers.Response:
     """ Destroys the user's session and redirects to index.
     """
     # retrieve session cookie from request
@@ -86,7 +86,7 @@ def logout() -> None:
 
 
 @app.route('/profile', strict_slashes=False)
-def profile():
+def profile() -> wrappers.Response:
     """ Returns profile info relating to user with request session ID.
     """
     sess_id = request.cookies.get('session_id')
@@ -98,6 +98,39 @@ def profile():
 
     # User found
     return jsonify({"email": user.email})  # 200 status code by default
+
+
+@app.route('/reset_password', methods=['POST'], strict_slashes=False)
+def get_reset_password_token() -> wrappers.Response:
+    """ Provides a token for resetting passwords.
+    """
+    email = request.form.get('email', None)
+
+    if email is None:
+        abort(403)
+
+    try:
+        reset_token = AUTH.get_reset_password_token(email)
+        return jsonify({"email": email, "reset_token": reset_token})
+    except ValueError:
+        # no user with `email` found; forbidden
+        abort(403)
+
+
+@app.route('/reset_password', methods=['PUT'], strict_slashes=False)
+def update_password() -> wrappers.Response:
+    """ Endpoint for updating passwords based on a valid reset token.
+    """
+    email = request.form.get('email', None)
+    reset_token = request.form.get('reset_token', None)
+    new_pwd = request.form.get('new_password', None)
+
+    try:
+        AUTH.update_password(reset_token, new_pwd)
+        return jsonify({"email": email, "message": "Password updated"})
+    except ValueError:
+        # invalid token and/or password; abort
+        abort(403)
 
 
 if __name__ == '__main__':
