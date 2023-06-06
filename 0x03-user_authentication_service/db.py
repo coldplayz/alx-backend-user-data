@@ -55,9 +55,12 @@ class DB:
 
         # InvalidRequestError will be raised for non-existent attributes
         try:
+            if not kwargs:
+                raise Exception
             user = sess.query(User).filter_by(**kwargs).first()
         except Exception:
             raise InvalidRequestError
+
         if user is None:
             raise NoResultFound
 
