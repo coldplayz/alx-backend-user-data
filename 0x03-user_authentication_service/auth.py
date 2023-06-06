@@ -38,9 +38,15 @@ class Auth:
             - User: a User instance object.
         """
         # TODO: email and password type validation
+        if email is None or\
+                not isinstance(email, str) or\
+                password is None or\
+                not isinstance(password, str):
+            raise ValueError
+
         # ensure the email is unique in the database
         db = self._db
-        user = None
+        new_user = None
         try:
             user = db.find_user_by(email=email)
             if user:
@@ -55,6 +61,12 @@ class Auth:
     def valid_login(self, email: str, password: str) -> bool:
         """ Checks if supplied credentials are valid.
         """
+        if email is None or\
+                password is None or\
+                not isinstance(email, str) or\
+                not isinstance(password, str):
+            return False
+
         db = self._db
 
         try:

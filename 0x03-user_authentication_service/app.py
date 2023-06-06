@@ -27,10 +27,6 @@ def users() -> Union[wrappers.Response, Tuple[wrappers.Response, int]]:
     email = request.form.get('email', None)
     pwd = request.form.get('password')
 
-    if email is None or pwd is None:
-        abort(400)
-
-    # email and password strings present
     try:
         new_user = AUTH.register_user(email, pwd)
         return jsonify({
@@ -48,10 +44,6 @@ def login() -> wrappers.Response:
     # retrieve login credentials
     email = request.form.get('email', None)
     pwd = request.form.get('password')
-
-    if email is None or pwd is None:
-        # unauthorized
-        abort(401)
 
     if not AUTH.valid_login(email, pwd):
         # invalid credentials
@@ -105,9 +97,6 @@ def get_reset_password_token() -> wrappers.Response:
     """ Provides a token for resetting passwords.
     """
     email = request.form.get('email', None)
-
-    if email is None:
-        abort(403)
 
     try:
         reset_token = AUTH.get_reset_password_token(email)
