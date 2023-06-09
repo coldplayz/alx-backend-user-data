@@ -42,7 +42,7 @@ class DB:
         # create a user object
         user = User(email=email, hashed_password=hashed_password)
         # retrieve a database session
-        sess = self.__session
+        sess = self._session
         # save User to database
         sess.add(user)
         sess.commit()
@@ -52,7 +52,7 @@ class DB:
     def find_user_by(self, **kwargs: Dict) -> User:
         """ Filters User objects based on kwargs, and returns the first.
         """
-        sess = self.__session
+        sess = self._session
 
         # InvalidRequestError will be raised for non-existent attributes
         try:
@@ -70,7 +70,7 @@ class DB:
     def update_user(self, user_id: int, **kwargs: dict) -> None:
         """ Updates a User record.
         """
-        sess = self.__session
+        sess = self._session
 
         try:
             user = self.find_user_by(id=user_id)
