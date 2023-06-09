@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Password encryption module.
+""" Authentication module.
 """
 from db import DB
 from user import User
